@@ -1,0 +1,28 @@
+<?xml version= "1.0" encoding ="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.rmtechs.waukids.scanner.state.mapper.StateMapper">
+    <insert id="insert" parameterType="StateVO" useGeneratedKeys="true" keyProperty="serialId">
+        INSERT INTO wk_state(
+            PK_Sta_Code,
+            FK_Sch_Gob_Sta_Code,
+            FK_Stu_Gob_Sta_Code,
+            Sta_Message,
+            Sta_Rank,
+            Sta_Date,
+            Sta_FK_Code
+        )
+        VALUES(
+            #{serialId},
+            #{schoolId},
+            #{studentId},
+            #{message},
+            #{code},
+            NOW(),
+            "0"
+        )
+        <selectKey keyProperty="serialId" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+</mapper>

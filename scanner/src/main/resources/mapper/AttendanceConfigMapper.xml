@@ -1,0 +1,52 @@
+<?xml version= "1.0" encoding ="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.rmtechs.waukids.scanner.attendance.mapper.AttendanceConfigMapper">
+    <resultMap id="configMap" type="AttendanceConfigVO">
+        <id property="id" javaType="int" column="PK_AttSet_Code" />
+        <id property="schoolId" javaType="int" column="FK_Sch_AttSet_Code" />
+
+        <result property="inStartTime" javaType="String" column="AttSet_Go_Starttime" />
+        <result property="inEndTime" javaType="String" column="AttSet_Go_Endtime" />
+        <result property="outStartTime" javaType="String" column="AttSet_Back_Starttime" />
+        <result property="outEndTime" javaType="String" column="AttSet_Back_Endtime" />
+
+        <result property="interval" javaType="int" column="AttSet_Settime" />
+        <result property="repeat" javaType="int" column="AttSet_Checklimit" />
+    </resultMap>
+
+    <select id="selectConfig" parameterType="int" resultMap="configMap">
+        SELECT
+            PK_AttSet_Code,
+            FK_Sch_AttSet_Code,
+            AttSet_Go_Starttime,
+            AttSet_Go_Endtime,
+            AttSet_Back_Starttime,
+            AttSet_Back_Endtime,
+            AttSet_Settime,
+            AttSet_Checklimit
+        FROM
+            wk_attend_setting
+        WHERE
+            FK_Sch_AttSet_Code = #{schoolId}
+    </select>
+
+    <select id="selectConfigs" resultMap="configMap">
+        SELECT
+            A.PK_AttSet_Code,
+            A.FK_Sch_AttSet_Code,
+            A.AttSet_Go_Starttime,
+            A.AttSet_Go_Endtime,
+            A.AttSet_Back_Starttime,
+            A.AttSet_Back_Endtime,
+            A.AttSet_Settime,
+            A.AttSet_Checklimit
+        FROM
+            wk_attend_setting A
+        LEFT OUTER JOIN
+            wk_school B ON A.FK_Sch_AttSet_Code = B.PK_Sch_Code
+        WHERE
+            B.IsDelete = 0
+    </select>
+
+</mapper>

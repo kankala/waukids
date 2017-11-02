@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+    <task:scheduled-tasks scheduler="queueScheduler">
+		<!-- 등원/하원 검사를 주중 7시부터 22까지 10초 단위로 검사함 (10초 이상으로 하면 하원 검사 주기보다 커져 하원 처리됨 -->
+        <task:scheduled ref="scannerManager" method="publish" cron="0/10 * 7-21 ? * MON-FRI" />
+        
+        <!-- 유치원생의 정보를 주중 6시에 새로 고침 -->
+        <task:scheduled ref="studentGroup" method="reset" cron="0 0 6 ? * MON-FRI" />
+
+    	<!-- 모든 스케쥴러는 22시에 중지 -->
+        <task:scheduled ref="kindergartenManager" method="destroy" cron="0 0 22 ? * MON-FRI" />
+    </task:scheduled-tasks>
+    <task:scheduler id="queueScheduler" pool-size="3"/>
+
+    <task:scheduled-tasks scheduler="scannerScheduler">
+        <!-- 등원 검사는 주중 7시에 시작 -->
+        <task:scheduled ref="kindergartenManager" method="enterKindergarten" cron="0 10 7 ? * MON-FRI" />
+
+        <!-- 하원 검사는 주중 13시 30분에 시작 -->
+        <task:scheduled ref="kindergartenManager" method="leaveKindergarten" cron="0 30 13 ? * MON-FRI" />
+    </task:scheduled-tasks>
+    <task:scheduler id="scannerScheduler" pool-size="100"/>
+
+</beans>

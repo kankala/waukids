@@ -1,0 +1,105 @@
+<?xml version= "1.0" encoding ="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.rmtechs.waukids.scanner.attendance.mapper.StudentMapper">
+    <resultMap id="studentMap" type="StudentVO">
+        <id property="schoolId" javaType="int" column="FK_Sch_Bea_Code" />
+        <id property="classId" javaType="int" column="FK_Cla_Stu_Code" />
+        <id property="studentId" javaType="int" column="FK_Stu_Bea_Code" />
+        <result property="name" javaType="String" column="Stu_Name" />
+        <result property="beaconId" javaType="String" column="Bea_Id" />
+        <result property="attend" javaType="int" column="Att_Check" />
+    </resultMap>
+
+    <select id="selectStudents" resultMap="studentMap">
+        SELECT
+            A.FK_Sch_Bea_Code,
+            B.FK_Cla_Stu_Code,
+            A.FK_Stu_Bea_Code,
+            B.Stu_Name,
+            A.Bea_Id,
+            C.Att_Check
+        FROM
+            wk_beacon A
+        INNER JOIN
+            wk_student B on A.PK_Bea_Code = B.FK_Bea_Stu_Code
+        LEFT OUTER JOIN
+            wk_attend C ON A.FK_Stu_Bea_Code = C.FK_Stu_Att_Code
+                AND DATE_FORMAT(C.Att_Date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+    </select>
+
+    <resultMap id="attendMap" type="StudentVO">
+        <id property="serialId" javaType="int" column="PK_Att_Code" />
+        <id property="schoolId" javaType="int" column="FK_Sch_Att_Code" />
+        <id property="classId" javaType="int" column="FK_Cla_Att_Code" />
+        <id property="studentId" javaType="int" column="FK_Stu_Att_Code" />
+    </resultMap>
+
+    <select id="selectAttend" resultMap="attendMap">
+        SELECT
+            PK_Att_Code,
+            FK_Sch_Att_Code,
+            FK_Cla_Att_Code,
+            FK_Stu_Att_Code
+        FROM
+            wk_attend
+        WHERE
+            FK_Sch_Att_Code = #{schoolId}
+        AND
+            FK_Cla_Att_Code = #{classId}
+        AND
+            FK_Stu_Att_Code = #{studentId}
+        AND
+            DATE_FORMAT(Att_Date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+    </select>
+
+    <insert id="insertAttend" parameterType="studentVO" useGeneratedKeys="true" keyProperty="serialId">
+        INSERT INTO wk_attend(
+            PK_Att_Code,
+            FK_Sch_Att_Code,
+            FK_Cla_Att_Code,
+            FK_Stu_Att_Code,
+            Att_Date,
+            Att_Check,
+            Att_Reason
+        )
+        VALUES(
+            #{serialId},
+            #{schoolId},
+            #{classId},
+            #{studentId},
+            <choose>
+                <when test="time != null">
+                    DATE_FORMAT(#{time},'%Y-%m-%d %H:%i'),
+                </when>
+                <otherwise>
+                    DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i'),
+                </otherwise>
+            </choose>
+            #{attend},
+            ''
+        )
+        <selectKey keyProperty="serialId" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateAttend" parameterType="studentVO">
+        UPDATE
+            wk_attend
+        SET
+            Att_Date = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i'),
+            Att_Check = #{attend}
+        WHERE
+            PK_Att_Code = #{serialId}
+    </update>
+
+    <update id="updateBattery" parameterType="studentVO">
+        UPDATE
+            wk_beacon
+        SET
+            bea_battery = #{battery}
+        WHERE
+            bea_id = #{beaconId}
+    </update>
+</mapper>

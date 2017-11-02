@@ -1,0 +1,38 @@
+<?xml version= "1.0" encoding ="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.rmtechs.waukids.scanner.mapper.ScannerMapper">
+    <resultMap id="scannerMap" type="ScannerVO">
+        <id property="id" javaType="int" column="PK_ScaSet_Code" />
+        <id property="schoolId" javaType="int" column="FK_Sch_ScaSet_Code" />
+        <result property="ipAddress" javaType="String" column="ScaSet_IP_Address" />
+        <result property="port" javaType="int" column="ScaSet_Port" />
+        <result property="isUsed" javaType="boolean" column="ScaSet_Is_used" />
+    </resultMap>
+
+    <select id="selectScanners" resultMap="scannerMap">
+        SELECT
+            PK_ScaSet_Code,
+            FK_Sch_ScaSet_Code,
+            ScaSet_IP_Address,
+            ScaSet_Port,
+            ScaSet_Is_used
+        FROM
+            wk_scanner_setting
+    </select>
+
+    <select id="selectScanner" parameterType="String" resultMap="scannerMap">
+        SELECT
+            PK_ScaSet_Code,
+            FK_Sch_ScaSet_Code,
+            ScaSet_IP_Address,
+            ScaSet_Port,
+            ScaSet_Is_used
+        FROM
+            wk_scanner_setting
+        WHERE
+            ScaSet_IP_Address is not null
+        AND
+            ScaSet_IP_Address = #{ipAddress}
+    </select>
+</mapper>

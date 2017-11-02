@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <!-- 쿼리에서 사용하는  typeAlias를 모두 이곳에서 관리한다 -->
+        <typeAlias alias="scannerVO" type="kr.co.rmtechs.waukids.scanner.scanner.bean.ScannerVO"/>
+        <typeAlias alias="attendanceConfigVO" type="kr.co.rmtechs.waukids.scanner.attendance.bean.AttendanceConfigVO"/>
+        <typeAlias alias="studentVO" type="kr.co.rmtechs.waukids.scanner.attendance.bean.StudentVO"/>
+        <typeAlias alias="stateVO" type="kr.co.rmtechs.waukids.scanner.state.bean.StateVO"/>
+    </typeAliases>
+    <mappers>
+    	<mapper resource="mapper/AttendanceConfigMapper.xml"/>
+    	<mapper resource="mapper/ScannerMapper.xml"/>
+    	<mapper resource="mapper/StateMapper.xml"/>
+    	<mapper resource="mapper/StudentMapper.xml"/>
+    </mappers>
+</configuration>

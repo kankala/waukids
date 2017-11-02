@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/db_waukids
+    username: root
+    password: 1234
+    type: com.zaxxer.hikari.HikariDataSource
+    
+    hikari:
+      connection-test-query: SELECT 1 FROM DUAL
+      minimum-idle: 5
+      maximum-pool-size: 10
+      pool-name: waukids
+  main:
+    banner-mode: "off"
+          
+mybatis:
+  config-location: mybatis-config.xml      

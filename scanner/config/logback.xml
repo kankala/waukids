@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanperiod="30 seconds">
+	<property name="LOG_PATH" value="./logs" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    	<encoder>
+    		<charset>UTF-8</charset>
+    		<Pattern>
+    			%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] [%logger{50}:%L] - %msg%n
+    		</Pattern>
+    	</encoder>
+    </appender>
+
+    <appender name="SCANNER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<File>${LOG_PATH}/scanner.log</File>
+    	<encoder>
+    		<charset>UTF-8</charset>
+    		<Pattern>
+    			%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] [%logger{50}:%L] - %msg%n
+    		</Pattern>
+    	</encoder>
+    	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    		<FileNamePattern>${LOG_PATH}/scanner_%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+    		<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+    			<maxFileSize>5MB</maxFileSize>
+    		</timeBasedFileNamingAndTriggeringPolicy>
+    		<maxHistory>90</maxHistory>
+    	</rollingPolicy>
+    </appender>
+
+    <appender name="SPRING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<File>${LOG_PATH}/waukids.log</File>
+    	<encoder>
+    		<charset>UTF-8</charset>
+    		<Pattern>
+    			%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] [%logger{50}:%L] - %msg%n
+    		</Pattern>
+    	</encoder>
+    	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    		<FileNamePattern>${LOG_PATH}/waukids_%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+    		<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+    			<maxFileSize>5MB</maxFileSize>
+    		</timeBasedFileNamingAndTriggeringPolicy>
+    		<maxHistory>90</maxHistory>
+    	</rollingPolicy>
+    </appender>
+
+    <logger name="kr.co.rmtechs" level="debug" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SCANNER"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SPRING"/>
+    </root>
+
+</configuration>
